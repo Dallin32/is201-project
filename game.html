@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BYU Basketball Trivia</title>
+
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 15px;
+      color: #222;
+      background-color: rgb(120, 188, 255);
+      min-height: 100vh;
+    }
+
+    a { color: blue; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    a:visited { color: rgb(205, 29, 20); }
+
+    .box {
+      background-color: white;
+      border: 2px solid white;
+      padding: 15px;
+      width: 700px;
+      margin: 20px auto;
+    }
+
+    .center { text-align: center; }
+    .bold { font-weight: bold; }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <div class="box center">
+    <img src="images/byu_basketball_logo.jpeg" height="80" alt="BYU Basketball Logo"><br><br>
+
+    <a href="index.html">Home</a> |
+    <a href="html/resume.html">Resume</a> |
+    <a href="html/fantasy.html">Fantasy Football</a> |
+    <a href="#">BYU Trivia</a>
+  </div>
+
+  <!-- GAME -->
+  <div class="box">
+    <h2 class="center">BYU Basketball Trivia</h2>
+
+    <p id="question" class="bold"></p>
+
+    <div id="answers">
+      <p>
+        <input type="radio" name="answer" id="a1">
+        <label for="a1" id="l1"></label>
+      </p>
+
+      <p>
+        <input type="radio" name="answer" id="a2">
+        <label for="a2" id="l2"></label>
+      </p>
+
+      <p>
+        <input type="radio" name="answer" id="a3">
+        <label for="a3" id="l3"></label>
+      </p>
+
+      <p>
+        <input type="radio" name="answer" id="a4">
+        <label for="a4" id="l4"></label>
+      </p>
+    </div>
+
+    <button onclick="checkAnswer()">Submit</button>
+    <button onclick="nextQuestion()">Next</button>
+    <button onclick="restartQuiz()">Restart</button>
+
+    <p id="feedback"></p>
+    <p id="score"></p>
+  </div>
+
+  <script>
+    const trivia = [
+      {
+        q: "Who is the current head coach of BYU Basketball?",
+        choices: ["Dave Rose", "Mark Pope", "Lee Cummard", "Kevin Young"],
+        correctIndex: 3
+      },
+      {
+        q: "Who is the leader in total minutes played in BYU Basketball history?",
+        choices: ["Kyle Collinsworth", "Jimmer Fredette", "Tyler Haws", "Danny Ainge"],
+        correctIndex: 2
+      },
+      {
+        q: "What college did Robert Wright III attend before BYU?",
+        choices: ["Baylor", "Houston", "Kansas", "Iowa St."],
+        correctIndex: 0
+      },
+      {
+        q: "Which of the following players IS a current starter for the BYU basketball team?",
+        choices: ["Khadim Mboup", "Kennard Davis Jr.", "Mihailo Boscovic", "Dominique Diomande"],
+        correctIndex: 1
+      },
+      {
+        q: "What NBA team does former Cougar Egor Demin play for?",
+        choices: ["Chicago Bulls", "Utah Jazz", "Brooklyn Nets", "Memphis Grizzlies"],
+        correctIndex: 2
+      }
+    ];
+
+    let current = 0;
+    let points = 0;
+
+    function loadQuestion() {
+      const item = trivia[current];
+
+      document.getElementById("answers").style.display = "block"; // ✅ make sure answers show
+      document.getElementById("question").textContent = item.q;
+
+      document.getElementById("l1").textContent = item.choices[0];
+      document.getElementById("l2").textContent = item.choices[1];
+      document.getElementById("l3").textContent = item.choices[2];
+      document.getElementById("l4").textContent = item.choices[3];
+
+      document.getElementById("a1").checked = false;
+      document.getElementById("a2").checked = false;
+      document.getElementById("a3").checked = false;
+      document.getElementById("a4").checked = false;
+
+      document.getElementById("feedback").textContent = "";
+      document.getElementById("score").textContent =
+        "Score: " + points + " / " + trivia.length;
+    }
+
+    function getSelectedIndex() {
+      if (document.getElementById("a1").checked) return 0;
+      if (document.getElementById("a2").checked) return 1;
+      if (document.getElementById("a3").checked) return 2;
+      if (document.getElementById("a4").checked) return 3;
+      return -1;
+    }
+
+    function checkAnswer() {
+      const selected = getSelectedIndex();
+
+      if (selected === -1) {
+        document.getElementById("feedback").textContent = "Pick an answer first.";
+        return;
+      }
+
+      if (selected === trivia[current].correctIndex) {
+        document.getElementById("feedback").textContent = "✅ Correct!";
+        points = points + 1;
+      } else {
+        document.getElementById("feedback").textContent = "❌ Incorrect.";
+      }
+
+      document.getElementById("score").textContent =
+        "Score: " + points + " / " + trivia.length;
+    }
+
+    function nextQuestion() {
+      current = current + 1;
+
+      if (current >= trivia.length) {
+        document.getElementById("question").textContent =
+          "🏀 Trivia Complete! Your final score: " +
+          points + " out of " + trivia.length;
+
+        document.getElementById("answers").style.display = "none"; // ✅ hides radio bubbles
+        document.getElementById("feedback").textContent = "";
+        return;
+      }
+
+      loadQuestion();
+    }
+
+    function restartQuiz() {
+      current = 0;
+      points = 0;
+      document.getElementById("answers").style.display = "block"; // ✅ bring them back
+      loadQuestion();
+    }
+
+    loadQuestion();
+  </script>
+
+</body>
+</html>
